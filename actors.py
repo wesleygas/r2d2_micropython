@@ -60,6 +60,9 @@ class ServoActor:
         self.setp = payload[0]
         self.speed = payload[1]
     #
+    def on_stop(self):
+        pass
+    #
     async def update(self):
         while self.running:
             # print("While Servo")
@@ -101,6 +104,9 @@ class DFPlayerActor:
             self.player.loop_disable()
         self.is_playing = True
         
+    def on_stop(self):
+        self.player.stop()
+        
     async def update(self):
         while self.running:
             if(self.is_playing):
@@ -110,7 +116,6 @@ class DFPlayerActor:
                 await aio.sleep_ms(10)
             else:
                 await aio.sleep_ms(50)
-        self.player.stop()
 
 
 class I2SAudioPlayerActor:
@@ -177,7 +182,9 @@ class I2SAudioPlayerActor:
             self.wav = open(f"/sd/{audio_file}", 'rb')
             self.wav.seek(audio_position + 44)
             self.state = I2SAudioPlayerActor.PLAYING
-
+    
+    def on_stop(self):
+        pass
     #
     async def update(self):
         # print("Update Audio", self.state)
@@ -281,6 +288,8 @@ class AudioPlayerActorV2:
             self.wav.seek(audio_position + 44)
             self.state = I2SAudioPlayerActor.PLAYING
 
+    def on_stop(self):
+        pass
     #
     async def update(self):
         # print("Update Audio", self.state)

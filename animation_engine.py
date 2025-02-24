@@ -11,14 +11,15 @@ class ActorAnimator:
             self.actuator.act(payload)
             await aio.sleep_ms(duration)
         self.actuator.running = False
+        self.actuator.on_stop()
         act_task.cancel()
 
 
 class Scene:
-    def __init__(self, animators: list):
-        self.animators = animators
+    def __init__(self, actors: list):
+        self.actors = actors
     async def _run(self):
-        await aio.gather(*[animator.animate() for animator in self.animators])
+        await aio.gather(*[actor.animate() for actor in self.actors])
         # await aio.gather([aio.create_task(actuator.animate()) for actuator in self.animated_actuators])
     def run(self):
         aio.run(self._run())
